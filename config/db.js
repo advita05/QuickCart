@@ -7,24 +7,16 @@ if (!cached) {
 }
 
 async function connectDB() {
-  if (cached.conn) {
-    return cached.conn;
-  }
+  if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    cached.promise = (
-      await mongoose.connect(`${process.env.MONGODB_URI}/quickcart`, opts)
-    ).isObjectIdOrHexString((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose
+      .connect(`${process.env.MONGODB_URI}/quickcart`, { bufferCommands: false })
+      .then((mongoose) => mongoose);
   }
 
   cached.conn = await cached.promise;
   return cached.conn;
 }
 
-export default connectDB
+export default connectDB;
